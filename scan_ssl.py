@@ -1,11 +1,14 @@
 # coding=utf-8
 """
-Скрипт анализирует SSL сайта и его поддоменов используя API SSL Labs (https://www.ssllabs.com/ssltest/index.html)
+The script analyzes a https of several sites using API SSL Labs (https://www.ssllabs.com/ssltest/index.html)
 
-Требования
+Requirements:
 - Python 2.7
 
-Запуск сприпта
+Environments variables:
+- SLACK_WEBHOOK - http address for publishing a report in slack (more https://api.slack.com/incoming-webhooks)
+
+Running:
 python scan_ssl.py https://host1.com https://host2.com https://host3.com
 """
 
@@ -18,20 +21,19 @@ import time
 import urllib2
 from Queue import Queue
 
-# сколько секунд скрипт будет ждать результат по одному хосту
+# how many seconds the script will wait a result of one site
 FETCHING_RESULT_TIMEOUT_IN_SECONDS = 20 * 60
 
-# через сколько секунд делать попытку получить результат
+# how many seconds the script waits before trying to get a result of one site
 TIME_BETWEEN_FETCH_RESULT_POLLING_IN_SECONDS = 10
 
-# через сколько секунд начинать анализировать новый хост
+# how many seconds the script waits before starting analyze a next site
 TIME_BETWEEN_START_ANALYZE_NEW_HOST_IN_SECONDS = 10
 
-# через сколько секунд делать новую попытку запустить анализ
-# (если ssl lab недоступен или была ошибка)
+# how many seconds the script waits before trying to start analyzing if some errors had been occurred
 TIME_BETWEEN_ANALYZE_POLLING_IN_SECONDS = 30
 
-# максимальное кол-во попыток запустить анализ по одному хосту
+# how much times the script tries to analyze one site
 MAX_ANALYZE_ATTEMPTS = 5
 
 ANALYZE_URL = 'https://api.ssllabs.com/api/v3/analyze'
